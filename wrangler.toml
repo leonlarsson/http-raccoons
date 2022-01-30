@@ -1,0 +1,12 @@
+name = "test"
+type = "webpack"
+
+account_id = ""
+workers_dev = true
+route = ""
+zone_id = ""
+compatibility_date = "2022-01-30"
+
+kv_namespaces = [ 
+  { binding = "CODES", id = "6d813d9939be47a98daf2e8fc3abe5f0" }
+]
