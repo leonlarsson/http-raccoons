@@ -10,6 +10,21 @@ for (const status in statuses) {
 const rootHTML = `<!DOCTYPE html>
 <head>
   <title>TrasHTTPandas - Trash Panda HTTP Responses</title>
+  <meta name="title" content="TrasHTTPandas">
+  <meta name="description" content="Small API for HTTP Trash Pandas.">
+  <meta name="theme-color" content="#bf2042">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://trashttpandas.ragnarok.workers.dev/">
+  <meta property="og:title" content="TrasHTTPandas">
+  <meta property="og:description" content="Small API for HTTP Trash Pandas.">
+  <meta property="og:image" content="https://i.imgur.com/99g7BJA.png">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://trashttpandas.ragnarok.workers.dev/">
+  <meta property="twitter:title" content="TrasHTTPandas">
+  <meta property="twitter:description" content="Small API for HTTP Trash Pandas.">
+  <meta property="twitter:image" content="https://i.imgur.com/99g7BJA.png">
 </head>
 <body>
     <style>
