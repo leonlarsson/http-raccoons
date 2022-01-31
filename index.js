@@ -5,7 +5,7 @@ const router = Router();
 // Create the root HTML. This populates the <ul> with each entry in statuses.js
 const htmlList = [];
 for (const status in statuses) {
-  htmlList.push(`<li><a href="https://trashttpandas.ragnarok.workers.dev/${statuses[status].code}">${statuses[status].code} (${statuses[status].message})</a></li>`);
+  htmlList.push(`<li><a href="/${statuses[status].code}">${statuses[status].code} (${statuses[status].message})</a></li>`);
 }
 const rootHTML = `<!DOCTYPE html>
 <head>
@@ -33,7 +33,11 @@ const rootHTML = `<!DOCTYPE html>
       }
     </style>
     <h1>TrasHTTPandas - Trash Panda HTTP Responses</h1>
+    <h3>Made by <a href="http://twitter.com/mozzyfx">Mozzy</a> (who sometimes dislikes frontend).</h3>
     <h3>I do not own any of the raccoon images. Full credits go to the respective owners.</h3>
+    <p>
+      To use, click of the supported codes below, or use https://trashttpandas.ragnarok.workers.dev/[status_code](.png)
+    </p>
     <ul>
       ${htmlList.join("\n")}
     </ul>
@@ -47,8 +51,12 @@ router.get('/', () => {
 
 // Create a response for each valid HTTP code in statuses.js
 for (const status in statuses) {
-  router.get(`/${statuses[status].code}`, async () => {
 
+  // Handle both /[status_code] and /[status_code].png
+  router.get(`/${statuses[status].code}`, HTTPHandler);
+  router.get(`/${statuses[status].code}.png`, HTTPHandler);
+
+  async function HTTPHandler() {
     // Get the Base64 data from KV
     const data = await CODES.get(`HTTP_${statuses[status].code}`);
 
@@ -64,7 +72,7 @@ for (const status in statuses) {
       headers: { 'content-type': 'image/png' },
       status: 200
     });
-  });
+  }
 }
 
 // 404 for everything else
