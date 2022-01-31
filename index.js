@@ -1,6 +1,6 @@
 import { Router } from 'itty-router';
-const router = Router();
 import statuses from "./lib/statuses.js";
+const router = Router();
 
 // Create the root HTML. This populates the <ul> with each entry in statuses.js
 const htmlList = [];
