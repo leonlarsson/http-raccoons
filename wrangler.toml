@@ -1,7 +1,7 @@
-name = "test"
+name = "trashttpandas"
 type = "webpack"
 
-account_id = ""
+account_id = "1691cf1451d1a8339e42de4c99264659"
 workers_dev = true
 route = ""
 zone_id = ""
