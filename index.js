@@ -2,13 +2,32 @@ import { Router } from 'itty-router';
 const router = Router();
 import statuses from "./lib/statuses.js";
 
-addEventListener('fetch', event => {
-  event.respondWith(router.handle(event.request));
-});
+// Create the root HTML. This populates the <ul> with each entry in statuses.js
+const htmlList = [];
+for (const status in statuses) {
+  htmlList.push(`<li><a href="https://trashttpandas.ragnarok.workers.dev/${statuses[status].code}">${statuses[status].code} (${statuses[status].message})</a></li>`);
+}
+const rootHTML = `<!DOCTYPE html>
+<head>
+  <title>TrasHTTPandas - Trash Panda HTTP Responses</title>
+</head>
+<body>
+    <style>
+      body {
+		    font-family: "Arial";
+      }
+    </style>
+    <h1>TrasHTTPandas - Trash Panda HTTP Responses</h1>
+    <h3>I do not own any of the raccoon images. Full credits go to the respective owners.</h3>
+    <ul>
+      ${htmlList.join("\n")}
+    </ul>
+  </body>
+</html>`
 
-// Root domain
+// Handle response for root domain
 router.get('/', () => {
-  return new Response("To get an image, please use https://domain.com/code");
+  return new Response(rootHTML, { headers: { 'Content-Type': 'text/html' }, status: 200 });
 });
 
 // Create a response for each valid HTTP code in statuses.js
@@ -19,7 +38,10 @@ for (const status in statuses) {
     const data = await CODES.get(`HTTP_${statuses[status].code}`);
 
     // If no KV found, return
-    if (!data) return new Response(`Could not find KV for HTTP ${statuses[status].code}`);
+    if (!data) return new Response(`Could not find results for HTTP ${statuses[status].code} (${statuses[status].message}). This is not expected and will only show if Cloudflare fails or if I forgot an image.`, {
+      headers: { 'Content-Type': 'text/plain' },
+      status: 404
+    });
 
     // Build blob from Base64 and respond
     const img = getImageBlobFromBase64(data);
@@ -31,7 +53,7 @@ for (const status in statuses) {
 }
 
 // 404 for everything else
-router.all('*', () => new Response('Not Found.', { status: 404 }));
+router.all('*', () => new Response(rootHTML, { headers: { 'Content-Type': 'text/html' }, status: 404 }));
 
 function getImageBlobFromBase64(data) {
   const b64String = data.split(',')[1];
@@ -43,3 +65,7 @@ function getImageBlobFromBase64(data) {
   }
   return new Blob([intArray], { type: 'image/png' });
 }
+
+addEventListener('fetch', event => {
+  event.respondWith(router.handle(event.request));
+});
