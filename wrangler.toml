@@ -7,6 +7,9 @@ route = ""
 zone_id = ""
 compatibility_date = "2022-01-30"
 
+[env.dev]
+name = "trashttpandas-dev"
+
 kv_namespaces = [ 
-  { binding = "CODES", id = "6d813d9939be47a98daf2e8fc3abe5f0" }
+  { binding = "CODES", id = "6d813d9939be47a98daf2e8fc3abe5f0", preview_id = "6d813d9939be47a98daf2e8fc3abe5f0" }
 ]
