@@ -75,9 +75,18 @@ for (const status in statuses) {
   }
 }
 
-// 404 for everything else
-router.all('*', () => new Response(rootHTML, { headers: { 'Content-Type': 'text/html' }, status: 404 }));
+// Return a custom 999 (technically 404) image, but with a response of 200 (to work with embeds etc.)
+router.all('*', async () => {
+  const data = await CODES.get("HTTP_999");
+  const img = getImageBlobFromBase64(data);
+  return new Response(img, {
+    headers: { 'content-type': 'image/png' },
+    status: 200
+  });
+});
 
+
+// Turn base64 data into PNG blob
 function getImageBlobFromBase64(data) {
   const b64String = data.split(',')[1];
   const byteString = atob(b64String);
