@@ -15,13 +15,13 @@ const rootHTML = `<!DOCTYPE html>
   <meta name="theme-color" content="#bf2042">
 
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://trashttpandas.ragnarok.workers.dev/">
+  <meta property="og:url" content="https://api.onlyraccoons.com/">
   <meta property="og:title" content="TrasHTTPandas">
   <meta property="og:description" content="Small API for HTTP Trash Pandas.">
   <meta property="og:image" content="https://i.imgur.com/99g7BJA.png">
 
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://trashttpandas.ragnarok.workers.dev/">
+  <meta property="twitter:url" content="https://api.onlyraccoons.com/">
   <meta property="twitter:title" content="TrasHTTPandas">
   <meta property="twitter:description" content="Small API for HTTP Trash Pandas.">
   <meta property="twitter:image" content="https://i.imgur.com/99g7BJA.png">
@@ -36,7 +36,7 @@ const rootHTML = `<!DOCTYPE html>
     <h3>Made by <a href="http://twitter.com/mozzyfx">Mozzy</a> (who sometimes dislikes frontend).</h3>
     <h3>I do not own any of the raccoon images. Full credits go to the respective owners.</h3>
     <p>
-      To use, click of the supported codes below, or use https://trashttpandas.ragnarok.workers.dev/[status_code](.png)
+      To use, click of the supported codes below, or use https://api.onlyraccoons.com/[status_code](.png)
     </p>
     <ul>
       ${htmlList.join("\n")}
