@@ -5,7 +5,7 @@ const router = Router();
 // Create the root HTML. This populates the <ul> with each entry in statuses.js
 const htmlList = [];
 for (const status in statuses) {
-  htmlList.push(`<li><a href="/${statuses[status].code}">${statuses[status].code} (${statuses[status].message})</a></li>`);
+  htmlList.push(`<li><strong>${statuses[status].code} ${statuses[status].message}</strong> - (<a href="/${statuses[status].code}">image</a>) (<a href="/text/${statuses[status].code}">text</a>) (<a href="/json/${statuses[status].code}">json</a>)</li>`);
 }
 const rootHTML = `<!DOCTYPE html>
 <head>
@@ -31,13 +31,39 @@ const rootHTML = `<!DOCTYPE html>
       body {
 		    font-family: "Arial";
       }
+
+      .code-bg {
+        background-color: #282c34;
+        color: #fff;
+        padding: 2px 5px;
+        border-radius: 5px;
+      }
+
+      .instructions {
+        font-size: 20px;
+      }
+
+      hr {
+        height: 7px;
+        background-color: #bf2042;
+      }
+
+      li {
+        margin: 10px 0;
+      }
     </style>
     <h1>TrasHTTPandas - Trash Panda HTTP Responses</h1>
     <h3>Made by <a href="http://twitter.com/mozzyfx">Mozzy</a> (who sometimes dislikes frontend).</h3>
     <h3>I do not own any of the raccoon images. Full credits go to the respective owners.</h3>
-    <p>
-      To use, click of the supported codes below, or use https://api.onlyraccoons.com/[status_code](.png)
+    <hr>
+    <p class="instructions">
+      To return <code class="code-bg">image/png</code>, click one of the supported codes below, or use <code class="code-bg">https://api.onlyraccoons.com/[status_code](.png)</code>
+      <br><br>
+      To return <code class="code-bg">text/plain</code>, use <code class="code-bg">https://api.onlyraccoons.com/text/[status_code]</code> or <code class="code-bg">https://api.onlyraccoons.com/[status_code].txt</code>
+      <br><br>
+      To return <code class="code-bg">application/json</code>, use <code class="code-bg">https://api.onlyraccoons.com/json/[status_code]</code> or <code class="code-bg">https://api.onlyraccoons.com/[status_code].json</code>
     </p>
+    <hr>
     <ul>
       ${htmlList.join("\n")}
     </ul>
@@ -50,37 +76,69 @@ router.get('/', () => {
 });
 
 // Create a response for each valid HTTP code in statuses.js
-for (const status in statuses) {
+for (const statusCode in statuses) {
 
-  // Handle both /[status_code] and /[status_code].png
-  router.get(`/${statuses[status].code}`, HTTPHandler);
-  router.get(`/${statuses[status].code}.png`, HTTPHandler);
+  const status = statuses[statusCode];
 
-  async function HTTPHandler() {
+  // Handle "/[status_code]", "/[status_code].png", "/image/[status_code]", "/image[status_code].png"
+  router.get(`/${status.code}`, HTTPHandlerImage);
+  router.get(`/${status.code}.png`, HTTPHandlerImage);
+  router.get(`/image/${status.code}`, HTTPHandlerImage);
+  router.get(`/image/${status.code}.png`, HTTPHandlerImage);
+
+  // Handle "/[status_code].txt", "/text/[status_code]", "/text/[status_code].txt"
+  router.get(`/${status.code}.txt`, HTTPHandlerText);
+  router.get(`/text/${status.code}`, HTTPHandlerText);
+  router.get(`/text/${status.code}.txt`, HTTPHandlerText);
+
+  // Handle "/[status_code].json", "/json/[status_code]", "/json/[status_code].json"
+  router.get(`/${status.code}.json`, HTTPHandlerJSON);
+  router.get(`/json/${status.code}`, HTTPHandlerJSON);
+  router.get(`/json/${status.code}.json`, HTTPHandlerJSON);
+
+  // Handler for image display
+  async function HTTPHandlerImage() {
     // Get the Base64 data from KV
-    const data = await CODES.get(`HTTP_${statuses[status].code}`);
+    const data = await CODES.get(`HTTP_${status.code}`);
 
     // If no KV found, return
-    if (!data) return new Response(`Could not find results for HTTP ${statuses[status].code} (${statuses[status].message}). This is not expected and will only show if Cloudflare fails or if I forgot an image.`, {
-      headers: { 'Content-Type': 'text/plain' },
+    if (!data) return new Response(`Could not find results for HTTP ${status.code} (${status.message}). This is not expected and will only show if Cloudflare fails or if I forgot an image.`, {
+      headers: { "Content-Type": "text/plain" },
       status: 404
     });
 
     // Build blob from Base64 and respond
     const img = getImageBlobFromBase64(data);
     return new Response(img, {
-      headers: { 'content-type': 'image/png' },
+      headers: { "Content-Type": "image/png" },
+      status: 200
+    });
+  }
+
+  // Handler for text display
+  function HTTPHandlerText() {
+    return new Response(`${status.code} ${status.message}`, {
+      headers: { "Content-Type": "text/plain" },
+      status: 200
+    });
+  }
+
+  // Handler for JSON display
+  function HTTPHandlerJSON() {
+    return new Response(JSON.stringify(status), {
+      headers: { "Content-Type": "application/json" },
       status: 200
     });
   }
 }
 
+
 // Return a custom 999 (technically 404) image, but with a response of 200 (to work with embeds etc.)
-router.all('*', async () => {
+router.all("*", async () => {
   const data = await CODES.get("HTTP_999");
   const img = getImageBlobFromBase64(data);
   return new Response(img, {
-    headers: { 'content-type': 'image/png' },
+    headers: { "Content-Type": "image/png" },
     status: 200
   });
 });
@@ -95,9 +153,9 @@ function getImageBlobFromBase64(data) {
   for (let i = 0; i < byteString.length; i++) {
     intArray[i] = byteString.charCodeAt(i);
   }
-  return new Blob([intArray], { type: 'image/png' });
+  return new Blob([intArray], { type: "image/png" });
 }
 
-addEventListener('fetch', event => {
+addEventListener("fetch", event => {
   event.respondWith(router.handle(event.request));
 });
