@@ -62,6 +62,8 @@ const rootHTML = `<!DOCTYPE html>
       To return <code class="code-bg">text/plain</code>, use <code class="code-bg">https://api.onlyraccoons.com/text/[status_code]</code> or <code class="code-bg">https://api.onlyraccoons.com/[status_code].txt</code>
       <br><br>
       To return <code class="code-bg">application/json</code>, use <code class="code-bg">https://api.onlyraccoons.com/json/[status_code]</code> or <code class="code-bg">https://api.onlyraccoons.com/[status_code].json</code>
+      <br><br>
+      To return the requested HTTP code (200-599) instead of 200 OK, add <code class="code-bg">?real=1</code> or <code class="code-bg">?simulate=1</code> like <code class="code-bg">https://api.onlyraccoons.com/500<span style="color: yellow;">?real=1</span></code>
     </p>
     <hr>
     <ul>
@@ -81,23 +83,27 @@ for (const statusCode in statuses) {
   const status = statuses[statusCode];
 
   // Handle "/[status_code]", "/[status_code].png", "/image/[status_code]", "/image[status_code].png"
-  router.get(`/${status.code}`, HTTPHandlerImage);
-  router.get(`/${status.code}.png`, HTTPHandlerImage);
-  router.get(`/image/${status.code}`, HTTPHandlerImage);
-  router.get(`/image/${status.code}.png`, HTTPHandlerImage);
+  router.get(`/${status.code}`, req => HTTPHandlerImage(req));
+  router.get(`/${status.code}.png`, req => HTTPHandlerImage(req));
+  router.get(`/image/${status.code}`, req => HTTPHandlerImage(req));
+  router.get(`/image/${status.code}.png`, req => HTTPHandlerImage(req));
 
   // Handle "/[status_code].txt", "/text/[status_code]", "/text/[status_code].txt"
-  router.get(`/${status.code}.txt`, HTTPHandlerText);
-  router.get(`/text/${status.code}`, HTTPHandlerText);
-  router.get(`/text/${status.code}.txt`, HTTPHandlerText);
+  router.get(`/${status.code}.txt`, req => HTTPHandlerText(req));
+  router.get(`/text/${status.code}`, req => HTTPHandlerText(req));
+  router.get(`/text/${status.code}.txt`, req => HTTPHandlerText(req));
 
   // Handle "/[status_code].json", "/json/[status_code]", "/json/[status_code].json"
-  router.get(`/${status.code}.json`, HTTPHandlerJSON);
-  router.get(`/json/${status.code}`, HTTPHandlerJSON);
-  router.get(`/json/${status.code}.json`, HTTPHandlerJSON);
+  router.get(`/${status.code}.json`, req => HTTPHandlerJSON(req));
+  router.get(`/json/${status.code}`, req => HTTPHandlerJSON(req));
+  router.get(`/json/${status.code}.json`, req => HTTPHandlerJSON(req));
 
   // Handler for image display
-  async function HTTPHandlerImage() {
+  async function HTTPHandlerImage(req) {
+
+    // Get the queries
+    const { query } = req;
+
     // Get the Base64 data from KV
     const data = await CODES.get(`HTTP_${status.code}`);
 
@@ -111,23 +117,31 @@ for (const statusCode in statuses) {
     const img = getImageBlobFromBase64(data);
     return new Response(img, {
       headers: { "Content-Type": "image/png" },
-      status: 200
+      status: useRealHTTPResponseCode(query) ? determineRealCodeResponse(status.code) : 200
     });
   }
 
   // Handler for text display
-  function HTTPHandlerText() {
+  function HTTPHandlerText(req) {
+
+    // Get the queries
+    const { query } = req;
+
     return new Response(`${status.code} ${status.message}`, {
       headers: { "Content-Type": "text/plain" },
-      status: 200
+      status: useRealHTTPResponseCode(query) ? determineRealCodeResponse(status.code) : 200
     });
   }
 
   // Handler for JSON display
-  function HTTPHandlerJSON() {
+  function HTTPHandlerJSON(req) {
+
+    // Get the queries
+    const { query } = req;
+
     return new Response(JSON.stringify(status), {
       headers: { "Content-Type": "application/json" },
-      status: 200
+      status: useRealHTTPResponseCode(query) ? determineRealCodeResponse(status.code) : 200
     });
   }
 }
@@ -154,6 +168,20 @@ function getImageBlobFromBase64(data) {
     intArray[i] = byteString.charCodeAt(i);
   }
   return new Blob([intArray], { type: "image/png" });
+}
+
+// Whether or not to attempt to return the requested HTTP code. Return true if ?real or ?simulate are true
+function useRealHTTPResponseCode(query) {
+  return query.simulate === "1" || query.simulate === "true" || query.simulate === "yes" || query.real === "1" || query.real === "true" || query.real === "yes" ? true : false;
+}
+
+// Queries ?real=1 OR ?simulate=1: If the code is not a valid HTTP code, return with 404. This is to prevent /999 to return a CF error due to 999 not being a valid HTTP code
+function determineRealCodeResponse(code) {
+  if (code >= 200 && code <= 599) {
+    return code;
+  } else {
+    return 404;
+  }
 }
 
 addEventListener("fetch", event => {
