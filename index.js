@@ -1,4 +1,4 @@
-import { Router } from 'itty-router';
+import { Router } from "itty-router";
 import statuses from "./lib/statuses.js";
 const router = Router();
 
@@ -32,7 +32,16 @@ const rootHTML = `<!DOCTYPE html>
 		    font-family: "Arial";
       }
 
-      .code-bg {
+      hr {
+        height: 7px;
+        background-color: #bf2042;
+      }
+      
+      li {
+        margin: 10px 0;
+      }
+      
+      code {
         background-color: #282c34;
         color: #fff;
         padding: 2px 5px;
@@ -43,13 +52,9 @@ const rootHTML = `<!DOCTYPE html>
         font-size: 20px;
       }
 
-      hr {
-        height: 7px;
-        background-color: #bf2042;
-      }
-
-      li {
-        margin: 10px 0;
+      #combinedLink {
+        text-decoration: none;
+        color: inherit;
       }
     </style>
     <h1>TrasHTTPandas - Trash Panda HTTP Responses</h1>
@@ -57,13 +62,17 @@ const rootHTML = `<!DOCTYPE html>
     <h3>I do not own any of the raccoon images. Full credits go to the respective owners.</h3>
     <hr>
     <p class="instructions">
-      To return <code class="code-bg">image/png</code>, click one of the supported codes below, or use <code class="code-bg">https://api.onlyraccoons.com/[status_code](.png)</code>
+      To return <code>image/png</code>, click one of the supported codes below, or use <code>https://api.onlyraccoons.com/[status_code](.png)</code>
       <br><br>
-      To return <code class="code-bg">text/plain</code>, use <code class="code-bg">https://api.onlyraccoons.com/text/[status_code]</code> or <code class="code-bg">https://api.onlyraccoons.com/[status_code].txt</code>
+      To return <code>text/plain</code>, use <code>https://api.onlyraccoons.com/text/[status_code]</code> or <code>https://api.onlyraccoons.com/[status_code].txt</code>
       <br><br>
-      To return <code class="code-bg">application/json</code>, use <code class="code-bg">https://api.onlyraccoons.com/json/[status_code]</code> or <code class="code-bg">https://api.onlyraccoons.com/[status_code].json</code>
+      To return <code>application/json</code>, use <code>https://api.onlyraccoons.com/json/[status_code]</code> or <code>https://api.onlyraccoons.com/[status_code].json</code>
       <br><br>
-      To return the requested HTTP code (200-599) instead of 200 OK, add <code class="code-bg">?real=1</code> or <code class="code-bg">?simulate=1</code> like <code class="code-bg">https://api.onlyraccoons.com/500<span style="color: yellow;">?real=1</span></code>
+      To return the requested HTTP code (200-599) instead of 200 OK, add <code>?real=1</code> or <code>?simulate=1</code> like <code><a id="combinedLink" href="/500?real=1">https://api.onlyraccoons.com/500?real=1</a></code>
+      <br><br>
+      To set the response time manually, add <code>?wait=x</code> or <code>?sleep=x</code> where <code>x</code> is an integer of milliseconds (max 110000) like <code><a id="combinedLink" href="/500?wait=5000">https://api.onlyraccoons.com/500?wait=5000</a></code>
+      <br><br>
+      Combined, it might look like <code><a id="combinedLink" href="/420.json?simulate=true&sleep=6000">https://api.onlyraccoons.com/<span style="color: #ff5b5b;">420</span><span style="color: lightblue;">.json</span><span style="color: yellow;">?simulate=true</span><span style="color: #49b3ff;">&sleep=6000</span></a></code>
     </p>
     <hr>
     <ul>
@@ -113,6 +122,9 @@ for (const statusCode in statuses) {
       status: 404
     });
 
+    // Wait for x milliseconds before responding if a query is specified
+    if (useSleepFunction(query)) await scheduler.wait(determineWaitTime(query));
+
     // Build blob from Base64 and respond
     const img = getImageBlobFromBase64(data);
     return new Response(img, {
@@ -122,10 +134,13 @@ for (const statusCode in statuses) {
   }
 
   // Handler for text display
-  function HTTPHandlerText(req) {
+  async function HTTPHandlerText(req) {
 
     // Get the queries
     const { query } = req;
+
+    // Wait for x milliseconds before responding if a query is specified
+    if (useSleepFunction(query)) await scheduler.wait(determineWaitTime(query));
 
     return new Response(`${status.code} ${status.message}`, {
       headers: { "Content-Type": "text/plain" },
@@ -134,10 +149,13 @@ for (const statusCode in statuses) {
   }
 
   // Handler for JSON display
-  function HTTPHandlerJSON(req) {
+  async function HTTPHandlerJSON(req) {
 
     // Get the queries
     const { query } = req;
+
+    // Wait for x milliseconds before responding if a query is specified
+    if (useSleepFunction(query)) await scheduler.wait(determineWaitTime(query));
 
     return new Response(JSON.stringify(status), {
       headers: { "Content-Type": "application/json" },
@@ -170,9 +188,14 @@ function getImageBlobFromBase64(data) {
   return new Blob([intArray], { type: "image/png" });
 }
 
-// Whether or not to attempt to return the requested HTTP code. Return true if ?real or ?simulate are true
+// Whether or not to attempt to return the requested HTTP code. Returns true if ?real or ?simulate are true
 function useRealHTTPResponseCode(query) {
   return query.simulate === "1" || query.simulate === "true" || query.simulate === "yes" || query.real === "1" || query.real === "true" || query.real === "yes" ? true : false;
+}
+
+// Whether or not to use the sleep function. Returns true if ?wait or ?sleep are integers
+function useSleepFunction(query) {
+  return Number.isInteger(Number.parseInt(query.wait)) || Number.isInteger(Number.parseInt(query.sleep)) ? true : false;
 }
 
 // Queries ?real=1 OR ?simulate=1: If the code is not a valid HTTP code, return with 404. This is to prevent /999 to return a CF error due to 999 not being a valid HTTP code
@@ -181,6 +204,15 @@ function determineRealCodeResponse(code) {
     return code;
   } else {
     return 404;
+  }
+}
+
+// If wait query is more than 110 seconds (110,000 ms), set time to 110,000 ms
+function determineWaitTime(query) {
+  if (Number.parseInt(query.wait) > 110000 || Number.parseInt(query.sleep) > 110000) {
+    return 110000;
+  } else {
+    return Number.parseInt(query.wait || query.sleep);
   }
 }
 
