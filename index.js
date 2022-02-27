@@ -68,11 +68,11 @@ const rootHTML = `<!DOCTYPE html>
       <br><br>
       To return <code>application/json</code>, use <code>https://api.onlyraccoons.com/json/[status_code]</code> or <code>https://api.onlyraccoons.com/[status_code].json</code>
       <br><br>
-      To return the requested HTTP code (200-599) instead of 200 OK, add <code>?real=1</code> or <code>?simulate=1</code> like <code><a id="combinedLink" href="/500?real=1">https://api.onlyraccoons.com/500?real=1</a></code>
+      To return the requested HTTP code (200-599) instead of 200 OK, add <code>?real=1</code> or <code>?simulate=1</code> like <a id="combinedLink" href="/500?real=1"><code>https://api.onlyraccoons.com/500?real=1</code></a>
       <br><br>
-      To set the response time manually, add <code>?wait=x</code> or <code>?sleep=x</code> where <code>x</code> is an integer of milliseconds (max 110000) like <code><a id="combinedLink" href="/500?wait=5000">https://api.onlyraccoons.com/500?wait=5000</a></code>
+      To set the response time manually, add <code>?wait=x</code> or <code>?sleep=x</code> where <code>x</code> is an integer of milliseconds (max 110000) like <a id="combinedLink" href="/500?wait=5000"><code>https://api.onlyraccoons.com/500?wait=5000</code></a>
       <br><br>
-      Combined, it might look like <code><a id="combinedLink" href="/420.json?simulate=true&sleep=6000">https://api.onlyraccoons.com/<span style="color: #ff5b5b;">420</span><span style="color: lightblue;">.json</span><span style="color: yellow;">?simulate=true</span><span style="color: #49b3ff;">&sleep=6000</span></a></code>
+      Combined, it might look like <a id="combinedLink" href="/420.json?simulate=true&sleep=6000"><code>https://api.onlyraccoons.com/<span style="color: #ff5b5b;">420</span><span style="color: lightblue;">.json</span><span style="color: yellow;">?simulate=true</span><span style="color: #49b3ff;">&sleep=6000</span></code></a>
     </p>
     <hr>
     <ul>
