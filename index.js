@@ -25,6 +25,8 @@ const rootHTML = `<!DOCTYPE html>
   <meta property="twitter:title" content="TrasHTTPandas">
   <meta property="twitter:description" content="Small API for HTTP Trash Pandas.">
   <meta property="twitter:image" content="https://i.imgur.com/99g7BJA.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <style>
@@ -56,23 +58,39 @@ const rootHTML = `<!DOCTYPE html>
         text-decoration: none;
         color: inherit;
       }
+
+      .status-code {
+        color: #ff5b5b;
+      }
+
+      .file-extension {
+        color: lightblue;
+      }
+
+      .query-real {
+        color: yellow;
+      }
+
+      .query-wait {
+        color: #49b3ff;
+      }
     </style>
     <h1>TrasHTTPandas - Trash Panda HTTP Responses</h1>
     <h3>Made by <a href="https://twitter.com/mozzyfx">Mozzy</a>. Built using <a href="https://workers.cloudflare.com/">Cloudflare Workers</a>.</h3>
     <h3>I do not own any of the raccoon images. Full credits go to the respective owners.</h3>
     <hr>
     <p class="instructions">
-      To return <code>image/png</code>, click one of the supported codes below, or use <code>https://api.onlyraccoons.com/[status_code](.png)</code>
+      To return <code>image/png</code>, click one of the supported codes below, or use <code>https://api.onlyraccoons.com/<span class="status-code">[status_code]</span>(<span class="file-extension">.png</span>)</code>
       <br><br>
-      To return <code>text/plain</code>, use <code>https://api.onlyraccoons.com/text/[status_code]</code> or <code>https://api.onlyraccoons.com/[status_code].txt</code>
+      To return <code>text/plain</code>, use <code>https://api.onlyraccoons.com/<span class="file-extension">text</span>/<span class="status-code">[status_code]</span></code> or <code>https://api.onlyraccoons.com/<span class="status-code">[status_code]</span><span class="file-extension">.txt</span></code>
       <br><br>
-      To return <code>application/json</code>, use <code>https://api.onlyraccoons.com/json/[status_code]</code> or <code>https://api.onlyraccoons.com/[status_code].json</code>
+      To return <code>application/json</code>, use <code>https://api.onlyraccoons.com/<span class="file-extension">json</span>/<span class="status-code">[status_code]</span></code> or <code>https://api.onlyraccoons.com/<span class="status-code">[status_code]</span><span class="file-extension">.json</span></code>
       <br><br>
-      To return the requested HTTP code (200-599) instead of 200 OK, add <code>?real=1</code> or <code>?simulate=1</code> like <a id="combinedLink" href="/500?real=1"><code>https://api.onlyraccoons.com/500?real=1</code></a>
+      To return the requested HTTP code (200-599) instead of 200 OK, add <code><span class="query-real">?real=1</span></code> or <code><span class="query-real">?simulate=1</span></code> like <a id="combinedLink" href="/500?real=1"><code>https://api.onlyraccoons.com/<span class="status-code">500</span><span class="query-real">?real=1</span></code></a>
       <br><br>
-      To set the response time manually, add <code>?wait=x</code> or <code>?sleep=x</code> where <code>x</code> is an integer of milliseconds (max 110000) like <a id="combinedLink" href="/500?wait=5000"><code>https://api.onlyraccoons.com/500?wait=5000</code></a>
+      To set the response time manually, add <code><span class="query-wait">?wait=x</span></code> or <code><span class="query-wait">?sleep=x</span></code> where <code class="query-wait">x</code> is an integer of milliseconds (max 110000) like <a id="combinedLink" href="/500?wait=5000"><code>https://api.onlyraccoons.com/<span class="status-code">500</span><span class="query-wait">?wait=5000</code></code></a>
       <br><br>
-      Combined, it might look like <a id="combinedLink" href="/420.json?simulate=true&sleep=6000"><code>https://api.onlyraccoons.com/<span style="color: #ff5b5b;">420</span><span style="color: lightblue;">.json</span><span style="color: yellow;">?simulate=true</span><span style="color: #49b3ff;">&sleep=6000</span></code></a>
+      Combined, it might look like <a id="combinedLink" href="/420.json?simulate=true&sleep=6000"><code>https://api.onlyraccoons.com/<span class="status-code">420</span><span class="file-extension">.json</span><span class="query-real">?simulate=true</span><span class="query-wait">&sleep=6000</span></code></a>
     </p>
     <hr>
     <ul>
