@@ -1,8 +1,8 @@
 {
   "private": true,
-  "name": "test",
+  "name": "trashttpandas",
   "version": "1.0.0",
-  "description": "A template for kick starting a Cloudflare Workers project",
+  "description": "An API for HTTP Raccoons on CLoudflare Workers.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
