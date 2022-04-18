@@ -76,7 +76,7 @@ const rootHTML = `<!DOCTYPE html>
       }
     </style>
     <h1>TrasHTTPandas - Trash Panda HTTP Responses</h1>
-    <h3>Made by <a href="https://twitter.com/mozzyfx">Mozzy</a>. Built using <a href="https://workers.cloudflare.com/">Cloudflare Workers</a>.</h3>
+    <h3>Made by <a href="https://twitter.com/mozzyfx">Mozzy</a>. Built using <a href="https://workers.cloudflare.com/">Cloudflare Workers</a>. <a href="https://github.com/leonlarsson/http-raccoons-worker">GitHub Repo</a>.</h3>
     <h3>I do not own any of the raccoon images. Full credits go to the respective owners.</h3>
     <hr>
     <p class="instructions">
