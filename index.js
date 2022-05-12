@@ -4,9 +4,7 @@ import rootHTML from "./lib/html.js";
 const router = Router();
 
 // Handle response for root domain
-router.get('/', () => {
-  return new Response(rootHTML, { headers: { 'Content-Type': 'text/html' }, status: 200 });
-});
+router.get('/', () => new Response(rootHTML, { headers: { 'Content-Type': 'text/html' }, status: 200 }));
 
 // Create a response for each valid HTTP code in statuses.js
 for (const statusCode in statuses) {
@@ -51,7 +49,7 @@ for (const statusCode in statuses) {
     const img = getImageBlobFromBase64(data);
     return new Response(img, {
       headers: { "Content-Type": "image/png" },
-      status: useRealHTTPResponseCode(query) ? determineRealCodeResponse(status.code) : 200
+      status: useRealHTTPResponseCode(query) ? determineRealHTTPResponseCode(status.code) : 200
     });
   }
 
@@ -66,7 +64,7 @@ for (const statusCode in statuses) {
 
     return new Response(`${status.code} ${status.message}`, {
       headers: { "Content-Type": "text/plain" },
-      status: useRealHTTPResponseCode(query) ? determineRealCodeResponse(status.code) : 200
+      status: useRealHTTPResponseCode(query) ? determineRealHTTPResponseCode(status.code) : 200
     });
   }
 
@@ -81,11 +79,10 @@ for (const statusCode in statuses) {
 
     return new Response(JSON.stringify(status), {
       headers: { "Content-Type": "application/json" },
-      status: useRealHTTPResponseCode(query) ? determineRealCodeResponse(status.code) : 200
+      status: useRealHTTPResponseCode(query) ? determineRealHTTPResponseCode(status.code) : 200
     });
   }
 }
-
 
 // Return a custom 999 (technically 404) image, but with a response of 200 (to work with embeds etc.)
 router.all("*", async () => {
@@ -96,7 +93,6 @@ router.all("*", async () => {
     status: 200
   });
 });
-
 
 // Turn base64 data into PNG blob
 function getImageBlobFromBase64(data) {
@@ -111,33 +107,16 @@ function getImageBlobFromBase64(data) {
 }
 
 // Whether or not to attempt to return the requested HTTP code. Returns true if ?real or ?simulate are true
-function useRealHTTPResponseCode(query) {
-  return query.simulate === "1" || query.simulate === "true" || query.simulate === "yes" || query.real === "1" || query.real === "true" || query.real === "yes" ? true : false;
-}
+const useRealHTTPResponseCode = query => query.simulate === "1" || query.simulate === "true" || query.simulate === "yes" || query.real === "1" || query.real === "true" || query.real === "yes";
 
 // Whether or not to use the sleep function. Returns true if ?wait or ?sleep are integers
-function useSleepFunction(query) {
-  return Number.isInteger(Number.parseInt(query.wait)) || Number.isInteger(Number.parseInt(query.sleep)) ? true : false;
-}
+const useSleepFunction = query => Number.isInteger(Number.parseInt(query.wait)) || Number.isInteger(Number.parseInt(query.sleep));
 
 // Queries ?real=1 OR ?simulate=1: If the code is not a valid HTTP code, return with 404. This is to prevent /999 to return a CF error due to 999 not being a valid HTTP code
-function determineRealCodeResponse(code) {
-  if (code >= 200 && code <= 599) {
-    return code;
-  } else {
-    return 404;
-  }
-}
+const determineRealHTTPResponseCode = code => code >= 200 && code <= 599 ? code : 404;
 
 // If wait query is more than 110 seconds (110,000 ms), set time to 110,000 ms
-function determineWaitTime(query) {
-  if (Number.parseInt(query.wait) > 110000 || Number.parseInt(query.sleep) > 110000) {
-    return 110000;
-  } else {
-    return Number.parseInt(query.wait || query.sleep);
-  }
-}
+const determineWaitTime = query => Number.parseInt(query.wait) > 110_000 || Number.parseInt(query.sleep) > 110_000 ? 110_000 : Number.parseInt(query.wait || query.sleep);
 
-addEventListener("fetch", event => {
-  event.respondWith(router.handle(event.request));
-});
+// Let itty handle the request
+addEventListener("fetch", event => event.respondWith(router.handle(event.request)));
