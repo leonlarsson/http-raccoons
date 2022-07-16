@@ -3,7 +3,7 @@ import type { StatusCode } from "hono/utils/http-status";
 import statuses from "./lib/statuses";
 import rootHTML from "./lib/html";
 
-const app = new Hono();
+const app = new Hono({ strict: false });
 const availableStatuses = Object.keys(statuses);
 
 type Status = {
