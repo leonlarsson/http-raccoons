@@ -3,7 +3,7 @@ import statuses from "./statuses.js";
 // Create the root HTML. This populates the <ul> with each entry in statuses.js
 const htmlList = Object.values(statuses).map(status => `<li><strong>${status.code} ${status.message}</strong> - (<a href="/${status.code}">image</a>) (<a href="/text/${status.code}">text</a>) (<a href="/json/${status.code}">json</a>)</li>`).join("\n");
 
-export default rootHTML = `<!DOCTYPE html>
+export default `<!DOCTYPE html>
 <head>
   <title>TrasHTTPandas - Trash Panda HTTP Responses</title>
   <meta name="title" content="TrasHTTPandas">
@@ -76,17 +76,17 @@ export default rootHTML = `<!DOCTYPE html>
     <h3>I do not own any of the raccoon images. Full credits go to the respective owners.</h3>
     <hr>
     <p class="instructions">
-      To return <code>image/png</code>, click one of the supported codes below, or use <code>https://api.onlyraccoons.com/<span class="status-code">[status_code]</span>(<span class="file-extension">.png</span>)</code>
+      To return <code>image/png</code>, use <code>https://api.onlyraccoons.com/<span class="file-extension">image</span>/<span class="status-code">[status_code]</span></code> or just <code>https://api.onlyraccoons.com/<span class="status-code">[status_code]</span></code>
       <br><br>
-      To return <code>text/plain</code>, use <code>https://api.onlyraccoons.com/<span class="file-extension">text</span>/<span class="status-code">[status_code]</span></code> or <code>https://api.onlyraccoons.com/<span class="status-code">[status_code]</span><span class="file-extension">.txt</span></code>
+      To return <code>text/plain</code>, use <code>https://api.onlyraccoons.com/<span class="file-extension">text</span>/<span class="status-code">[status_code]</span></code>
       <br><br>
-      To return <code>application/json</code>, use <code>https://api.onlyraccoons.com/<span class="file-extension">json</span>/<span class="status-code">[status_code]</span></code> or <code>https://api.onlyraccoons.com/<span class="status-code">[status_code]</span><span class="file-extension">.json</span></code>
+      To return <code>application/json</code>, use <code>https://api.onlyraccoons.com/<span class="file-extension">json</span>/<span class="status-code">[status_code]</span></code>
       <br><br>
       To return the requested HTTP code (200-599) instead of 200 OK, add <code><span class="query-real">?real=1</span></code> or <code><span class="query-real">?simulate=1</span></code> like <a id="combinedLink" href="/500?real=1"><code>https://api.onlyraccoons.com/<span class="status-code">500</span><span class="query-real">?real=1</span></code></a>
       <br><br>
       To set the response time manually, add <code><span class="query-wait">?wait=x</span></code> or <code><span class="query-wait">?sleep=x</span></code> where <code class="query-wait">x</code> is an integer of milliseconds (max 110000) like <a id="combinedLink" href="/500?wait=5000"><code>https://api.onlyraccoons.com/<span class="status-code">500</span><span class="query-wait">?wait=5000</code></code></a>
       <br><br>
-      Combined, it might look like <a id="combinedLink" href="/420.json?simulate=true&sleep=6000"><code>https://api.onlyraccoons.com/<span class="status-code">420</span><span class="file-extension">.json</span><span class="query-real">?simulate=true</span><span class="query-wait">&sleep=6000</span></code></a>
+      Combined, it might look like <a id="combinedLink" href="/json/420?simulate=true&sleep=6000"><code>https://api.onlyraccoons.com/<span class="file-extension">json</span>/<span class="status-code">420</span><span class="query-real">?simulate=true</span><span class="query-wait">&sleep=6000</span></code></a>
     </p>
     <hr>
     <ul>

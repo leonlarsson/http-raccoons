@@ -1,19 +1,15 @@
 {
   "private": true,
   "name": "trashttpandas",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "An API for HTTP Raccoons on Cloudflare Workers.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write '**/*.{js,css,json,md}'"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Leon San José Larsson <leonlarsson8@gmail.com>",
   "license": "MIT",
-  "devDependencies": {
-    "prettier": "^1.18.2"
-  },
   "dependencies": {
-    "itty-router": "^2.4.10"
+    "hono": "^2.0.0"
   }
 }

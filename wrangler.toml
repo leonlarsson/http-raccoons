@@ -1,8 +1,5 @@
 name = "trashttpandas"
-main = "./index.js"
-
-account_id = "1691cf1451d1a8339e42de4c99264659"
-workers_dev = true
+main = "./index.ts"
 compatibility_date = "2022-05-11"
 
 kv_namespaces = [ 
