@@ -40,7 +40,7 @@ app.get("/:type/:status", async c => {
         case "text":
             return c.text(`${status.code} ${status.message}`, useRealHTTPResponseCode(query) ? determineRealHTTPResponseCode(status.code) : 200);
         case "json":
-            return c.json(status, useRealHTTPResponseCode(query) ? determineRealHTTPResponseCode(status.code) : 200);
+            return c.json({ ...status, image: `https://api.onlyraccoons.com/${status.code}` }, useRealHTTPResponseCode(query) ? determineRealHTTPResponseCode(status.code) : 200);
     }
 });
 
