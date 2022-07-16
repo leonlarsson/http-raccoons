@@ -3,7 +3,7 @@ import type { StatusCode } from "hono/utils/http-status";
 import statuses from "./lib/statuses";
 import rootHTML from "./lib/html";
 
-const app = new Hono({ strict: false });
+const app = new Hono();
 const availableStatuses = Object.keys(statuses);
 
 type Status = {
@@ -45,7 +45,7 @@ app.get("/:type/:status", async c => {
 });
 
 // Redirect to root on unknown route
-app.get("*", c => c.redirect("/", 301));
+app.get("*", c => c.text("Weird route? Trailing slash? Please go to api.onlyraccoons.com", 404));
 
 const respondWithImage = async (c: any, status: Status, query: Record<string, string>) => {
     // Get the Base64 data from KV
