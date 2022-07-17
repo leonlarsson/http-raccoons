@@ -21,14 +21,17 @@ type ReturnType =
 // Return root HTML
 app.get("/", c => c.html(rootHTML));
 
-// Return image
+// Return png
 app.get("/:statusImage", async c => {
     const statusInput = c.req.param("statusImage");
     const query = c.req.query();
+
     if (!availableStatuses.includes(statusInput)) return c.text(`Status must be one of ${availableStatuses.join(", ")}`, 404);
     const status = statuses[statusInput];
+
     // Wait for x milliseconds before responding if a query is specified
     if (useSleepFunction(query)) await sleep(determineWaitTime(query));
+
     return respondWithImage(c, status, query, "png");
 });
 
@@ -36,11 +39,14 @@ app.get("/:statusImage", async c => {
 app.get("/:type/:status", async c => {
     const { type, status: statusInput } = c.req.param();
     const query = c.req.query();
+
     if (!["png", "jpeg", "webp", "text", "json"].includes(type)) return c.text("Type must be one of: png, jpeg, webp, text, json.", 400);
     if (!availableStatuses.includes(statusInput)) return c.text(`Status must be one of ${availableStatuses.join(", ")}`, 404);
     const status = statuses[statusInput];
+
     // Wait for x milliseconds before responding if a query is specified
     if (useSleepFunction(query)) await sleep(determineWaitTime(query));
+
     switch (type) {
         case "png":
         case "jpeg":
@@ -70,7 +76,7 @@ const respondWithImage = async (c: any, status: Status, query: Record<string, st
     // Get the Base64 data from KV
     const imageDataBase64: string = await c.env.CODES.get(`HTTP_${status.code}`);
     // If no KV found, return
-    if (!imageDataBase64) return c.text(`Could not find results for HTTP ${status.code} (${status.message}). This is not expected and will only show if Cloudflare fails or if I forgot an image.`, 404);
+    if (!imageDataBase64) return c.text(`Could not find KV results for HTTP ${status.code} (${status.message}). This is not expected and will only show if Cloudflare fails or if I forgot an image.`, 404);
 
     const img = getImageBlobFromBase64(imageDataBase64, type);
 
