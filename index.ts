@@ -11,6 +11,13 @@ type Status = {
     message: string;
 };
 
+type ReturnType =
+    | "png"
+    | "jpeg"
+    | "webp"
+    | "text"
+    | "json"
+
 // Return root HTML
 app.get("/", c => c.html(rootHTML));
 
@@ -22,47 +29,59 @@ app.get("/:statusImage", async c => {
     const status = statuses[statusInput];
     // Wait for x milliseconds before responding if a query is specified
     if (useSleepFunction(query)) await sleep(determineWaitTime(query));
-    return respondWithImage(c, status, query);
+    return respondWithImage(c, status, query, "png");
 });
 
-// Return image, text, or json
+// Return png, jpeg, webp, text, or json
 app.get("/:type/:status", async c => {
     const { type, status: statusInput } = c.req.param();
     const query = c.req.query();
-    if (!["image", "text", "json"].includes(type)) return c.text("Type must be one of: image, text, json.", 400);
+    if (!["png", "jpeg", "webp", "text", "json"].includes(type)) return c.text("Type must be one of: png, jpeg, webp, text, json.", 400);
     if (!availableStatuses.includes(statusInput)) return c.text(`Status must be one of ${availableStatuses.join(", ")}`, 404);
     const status = statuses[statusInput];
     // Wait for x milliseconds before responding if a query is specified
     if (useSleepFunction(query)) await sleep(determineWaitTime(query));
     switch (type) {
-        case "image":
-            return respondWithImage(c, status, query);
+        case "png":
+        case "jpeg":
+        case "webp":
+            return respondWithImage(c, status, query, type);
         case "text":
             return c.text(`${status.code} ${status.message}`, useRealHTTPResponseCode(query) ? determineRealHTTPResponseCode(status.code) : 200);
         case "json":
-            return c.json({ ...status, image: `https://api.onlyraccoons.com/${status.code}` }, useRealHTTPResponseCode(query) ? determineRealHTTPResponseCode(status.code) : 200);
+            return c.json({
+                ...status,
+                formats: {
+                    main: `https://api.onlyraccoons.com/${status.code}`,
+                    png: `https://api.onlyraccoons.com/png/${status.code}`,
+                    jpeg: `https://api.onlyraccoons.com/jpeg/${status.code}`,
+                    webp: `https://api.onlyraccoons.com/webp/${status.code}`,
+                    text: `https://api.onlyraccoons.com/text/${status.code}`,
+                    json: `https://api.onlyraccoons.com/json/${status.code}`
+                }
+            }, useRealHTTPResponseCode(query) ? determineRealHTTPResponseCode(status.code) : 200);
     }
 });
 
 // Redirect to root on unknown route
 app.get("*", c => c.text("Weird route? Trailing slash? Please go to api.onlyraccoons.com", 404));
 
-const respondWithImage = async (c: any, status: Status, query: Record<string, string>) => {
+const respondWithImage = async (c: any, status: Status, query: Record<string, string>, type: ReturnType) => {
     // Get the Base64 data from KV
-    const imageDataBase64 = await c.env.CODES.get(`HTTP_${status.code}`);
+    const imageDataBase64: string = await c.env.CODES.get(`HTTP_${status.code}`);
     // If no KV found, return
     if (!imageDataBase64) return c.text(`Could not find results for HTTP ${status.code} (${status.message}). This is not expected and will only show if Cloudflare fails or if I forgot an image.`, 404);
 
-    const img = getImageBlobFromBase64(imageDataBase64);
+    const img = getImageBlobFromBase64(imageDataBase64, type);
 
     return new Response(img, {
-        headers: { "Content-Type": "image/png" },
+        headers: { "Content-Type": `image/${type}` },
         status: useRealHTTPResponseCode(query) ? determineRealHTTPResponseCode(status.code) : 200
     });
 }
 
-// Turn base64 data into PNG blob
-const getImageBlobFromBase64 = (imageDataBase64: string) => {
+// Turn base64 data into image blob
+const getImageBlobFromBase64 = (imageDataBase64: string, type: ReturnType) => {
     const b64String = imageDataBase64.split(',')[1];
     const byteString = atob(b64String);
     const arrayBuffer = new ArrayBuffer(byteString.length);
@@ -70,7 +89,7 @@ const getImageBlobFromBase64 = (imageDataBase64: string) => {
     for (let i = 0; i < byteString.length; i++) {
         intArray[i] = byteString.charCodeAt(i);
     }
-    return new Blob([intArray], { type: "image/png" });
+    return new Blob([intArray], { type: `image/${type}` });
 }
 
 // Whether or not to attempt to return the requested HTTP code. Returns true if ?real or ?simulate are true
