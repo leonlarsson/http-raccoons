@@ -93,8 +93,9 @@ export default `<!DOCTYPE html>
       Combined, it might look like <a id="combinedLink" href="/json/420?simulate=true&sleep=6000"><code>https://api.onlyraccoons.com/<span class="file-extension">json</span>/<span class="status-code">420</span><span class="query-real">?simulate=true</span><span class="query-wait">&sleep=6000</span></code></a>
     </p>
     <hr>
+    <code style="font-size: 15px;"><a id="combinedLink" href="/all"><span style="color:#68cdfe">JSON</span>.<span style="color:#d0dc8b">stringify(</span><span style="color:#32b4ff">statuses</span><span style="color:#d0dc8b">)</span></a></code>
     <ul>
       ${htmlList}
     </ul>
   </body>
-</html>`
+</html>`;

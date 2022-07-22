@@ -11,15 +11,29 @@ type Status = {
     message: string;
 };
 
-type ReturnType =
-    | "png"
-    | "jpeg"
-    | "webp"
-    | "text"
-    | "json"
+type ReturnType = "png" | "jpeg" | "webp" | "text" | "json";
 
 // Return root HTML
 app.get("/", c => c.html(rootHTML));
+
+// Return an array of all the statuses
+app.get("/all", c => {
+    const output = availableStatuses.map(status => {
+        const statusObject: Status = statuses[status];
+        return {
+            ...statusObject,
+            formats: {
+                main: `https://api.onlyraccoons.com/${statusObject.code}`,
+                png: `https://api.onlyraccoons.com/png/${statusObject.code}`,
+                jpeg: `https://api.onlyraccoons.com/jpeg/${statusObject.code}`,
+                webp: `https://api.onlyraccoons.com/webp/${statusObject.code}`,
+                text: `https://api.onlyraccoons.com/text/${statusObject.code}`,
+                json: `https://api.onlyraccoons.com/json/${statusObject.code}`
+            }
+        }
+    });
+    return c.json(output);
+});
 
 // Return png
 app.get("/:statusImage", async c => {
