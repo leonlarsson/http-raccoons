@@ -1,10 +1,14 @@
-import { Hono } from "hono";
+import { Context, Hono } from "hono";
 import type { StatusCode } from "hono/utils/http-status";
 import statuses from "./lib/statuses";
 import rootHTML from "./lib/html";
 
-const app = new Hono();
+const app = new Hono<Bindings>();
 const availableStatuses = Object.keys(statuses);
+
+type Bindings = {
+    CODES_KV: KVNamespace;
+};
 
 type Status = {
     code: number;
@@ -86,9 +90,9 @@ app.get("/:type/:status", async c => {
 // Redirect to root on unknown route
 app.get("*", c => c.text("Weird route? Trailing slash? Please go to api.onlyraccoons.com", 404));
 
-const respondWithImage = async (c: any, status: Status, query: Record<string, string>, type: ReturnType) => {
+const respondWithImage = async (c: Context, status: Status, query: Record<string, string>, type: ReturnType) => {
     // Get the Base64 data from KV, and cache for 1 week
-    const imageDataBase64: string = await c.env.CODES.get(`HTTP_${status.code}`, { cacheTtl: 604_800 });
+    const imageDataBase64 = await (c.env.CODES_KV as KVNamespace).get(`HTTP_${status.code}`, { cacheTtl: 604_800 });
     // If no KV found, return
     if (!imageDataBase64) return c.text(`Could not find KV results for HTTP ${status.code} (${status.message}). This is not expected and will only show if Cloudflare fails or if I forgot an image.`, 404);
 
