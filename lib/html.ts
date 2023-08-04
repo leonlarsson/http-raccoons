@@ -1,7 +1,9 @@
 import statuses from "./statuses.js";
 
 // Create the root HTML. This populates the <ul> with each entry in statuses.js
-const htmlList = Object.values(statuses).map(status => `<li><strong>${status.code} ${status.message}</strong> - (<a href="/${status.code}">png</a>) (<a href="/jpeg/${status.code}">jpeg</a>) (<a href="/webp/${status.code}">webp</a>) (<a href="/text/${status.code}">text</a>) (<a href="/json/${status.code}">json</a>)</li>`).join("\n");
+const htmlList = Object.values(statuses)
+  .map(status => `<li><strong>${status.code} ${status.message}</strong> - (<a href="/${status.code}">png</a>) (<a href="/jpeg/${status.code}">jpeg</a>) (<a href="/webp/${status.code}">webp</a>) (<a href="/text/${status.code}">text</a>) (<a href="/json/${status.code}">json</a>)</li>`)
+  .join("\n");
 
 export default `<!DOCTYPE html>
 <head>
