@@ -13,13 +13,13 @@ export default `<!DOCTYPE html>
   <meta name="theme-color" content="#bf2042">
 
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://api.onlyraccoons.com/">
+  <meta property="og:url" content="https://httpraccoons.com/">
   <meta property="og:title" content="TrasHTTPandas">
   <meta property="og:description" content="Small API for HTTP Trash Pandas.">
   <meta property="og:image" content="https://i.imgur.com/99g7BJA.png">
 
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://api.onlyraccoons.com/">
+  <meta property="twitter:url" content="https://httpraccoons.com/">
   <meta property="twitter:title" content="TrasHTTPandas">
   <meta property="twitter:description" content="Small API for HTTP Trash Pandas.">
   <meta property="twitter:image" content="https://i.imgur.com/99g7BJA.png">
@@ -78,21 +78,21 @@ export default `<!DOCTYPE html>
     <h3>I do not own any of the raccoon images. Full credits go to the respective owners.</h3>
     <hr>
     <p class="instructions">
-      To return <code>image/png</code>, use <code>https://api.onlyraccoons.com/<span class="file-extension">png</span>/<span class="status-code">[status_code]</span></code> or just <code>https://api.onlyraccoons.com/<span class="status-code">[status_code]</span></code>
+      To return <code>image/png</code>, use <code>https://httpraccoons.com/<span class="file-extension">png</span>/<span class="status-code">[status_code]</span></code> or just <code>https://httpraccoons.com/<span class="status-code">[status_code]</span></code>
       <br><br>
-      To return <code>image/jpeg</code>, use <code>https://api.onlyraccoons.com/<span class="file-extension">jpeg</span>/<span class="status-code">[status_code]</span></code>
+      To return <code>image/jpeg</code>, use <code>https://httpraccoons.com/<span class="file-extension">jpeg</span>/<span class="status-code">[status_code]</span></code>
       <br><br>
-      To return <code>image/webp</code>, use <code>https://api.onlyraccoons.com/<span class="file-extension">webp</span>/<span class="status-code">[status_code]</span></code>
+      To return <code>image/webp</code>, use <code>https://httpraccoons.com/<span class="file-extension">webp</span>/<span class="status-code">[status_code]</span></code>
       <br><br>
-      To return <code>text/plain</code>, use <code>https://api.onlyraccoons.com/<span class="file-extension">text</span>/<span class="status-code">[status_code]</span></code>
+      To return <code>text/plain</code>, use <code>https://httpraccoons.com/<span class="file-extension">text</span>/<span class="status-code">[status_code]</span></code>
       <br><br>
-      To return <code>application/json</code>, use <code>https://api.onlyraccoons.com/<span class="file-extension">json</span>/<span class="status-code">[status_code]</span></code>
+      To return <code>application/json</code>, use <code>https://httpraccoons.com/<span class="file-extension">json</span>/<span class="status-code">[status_code]</span></code>
       <br><br>
-      To return the requested HTTP code (200-599) instead of 200 OK, add <code><span class="query-real">?real=1</span></code> or <code><span class="query-real">?simulate=1</span></code> like <a id="combinedLink" href="/500?real=1"><code>https://api.onlyraccoons.com/<span class="status-code">500</span><span class="query-real">?real=1</span></code></a>
+      To return the requested HTTP code (200-599) instead of 200 OK, add <code><span class="query-real">?real=1</span></code> or <code><span class="query-real">?simulate=1</span></code> like <a id="combinedLink" href="/500?real=1"><code>https://httpraccoons.com/<span class="status-code">500</span><span class="query-real">?real=1</span></code></a>
       <br><br>
-      To set the response time manually, add <code><span class="query-wait">?wait=x</span></code> or <code><span class="query-wait">?sleep=x</span></code> where <code class="query-wait">x</code> is an integer of milliseconds (max 110000) like <a id="combinedLink" href="/500?wait=5000"><code>https://api.onlyraccoons.com/<span class="status-code">500</span><span class="query-wait">?wait=5000</code></code></a>
+      To set the response time manually, add <code><span class="query-wait">?wait=x</span></code> or <code><span class="query-wait">?sleep=x</span></code> where <code class="query-wait">x</code> is an integer of milliseconds (max 110000) like <a id="combinedLink" href="/500?wait=5000"><code>https://httpraccoons.com/<span class="status-code">500</span><span class="query-wait">?wait=5000</code></code></a>
       <br><br>
-      Combined, it might look like <a id="combinedLink" href="/json/420?simulate=true&sleep=6000"><code>https://api.onlyraccoons.com/<span class="file-extension">json</span>/<span class="status-code">420</span><span class="query-real">?simulate=true</span><span class="query-wait">&sleep=6000</span></code></a>
+      Combined, it might look like <a id="combinedLink" href="/json/420?simulate=true&sleep=6000"><code>https://httpraccoons.com/<span class="file-extension">json</span>/<span class="status-code">420</span><span class="query-real">?simulate=true</span><span class="query-wait">&sleep=6000</span></code></a>
     </p>
     <hr>
     <code style="font-size: 15px;"><a id="combinedLink" href="/all"><span style="color:#68cdfe">JSON</span>.<span style="color:#d0dc8b">stringify(</span><span style="color:#32b4ff">statuses</span><span style="color:#d0dc8b">)</span></a></code>

@@ -2,4 +2,4 @@
 
 HTTP Raccoons. That's it.
 
-Link: https://api.onlyraccoons.com/
+Link: https://httpraccoons.com/

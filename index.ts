@@ -27,12 +27,12 @@ app.get("/all", c => {
     return {
       ...statusObject,
       formats: {
-        main: `https://api.onlyraccoons.com/${statusObject.code}`,
-        png: `https://api.onlyraccoons.com/png/${statusObject.code}`,
-        jpeg: `https://api.onlyraccoons.com/jpeg/${statusObject.code}`,
-        webp: `https://api.onlyraccoons.com/webp/${statusObject.code}`,
-        text: `https://api.onlyraccoons.com/text/${statusObject.code}`,
-        json: `https://api.onlyraccoons.com/json/${statusObject.code}`
+        main: `https://httpraccoons.com/${statusObject.code}`,
+        png: `https://httpraccoons.com/png/${statusObject.code}`,
+        jpeg: `https://httpraccoons.com/jpeg/${statusObject.code}`,
+        webp: `https://httpraccoons.com/webp/${statusObject.code}`,
+        text: `https://httpraccoons.com/text/${statusObject.code}`,
+        json: `https://httpraccoons.com/json/${statusObject.code}`
       }
     };
   });
@@ -77,12 +77,12 @@ app.get("/:type/:status", async c => {
         {
           ...status,
           formats: {
-            main: `https://api.onlyraccoons.com/${status.code}`,
-            png: `https://api.onlyraccoons.com/png/${status.code}`,
-            jpeg: `https://api.onlyraccoons.com/jpeg/${status.code}`,
-            webp: `https://api.onlyraccoons.com/webp/${status.code}`,
-            text: `https://api.onlyraccoons.com/text/${status.code}`,
-            json: `https://api.onlyraccoons.com/json/${status.code}`
+            main: `https://httpraccoons.com/${status.code}`,
+            png: `https://httpraccoons.com/png/${status.code}`,
+            jpeg: `https://httpraccoons.com/jpeg/${status.code}`,
+            webp: `https://httpraccoons.com/webp/${status.code}`,
+            text: `https://httpraccoons.com/text/${status.code}`,
+            json: `https://httpraccoons.com/json/${status.code}`
           }
         },
         useRealHTTPResponseCode(query) ? determineRealHTTPResponseCode(status.code) : 200
@@ -91,7 +91,7 @@ app.get("/:type/:status", async c => {
 });
 
 // Redirect to root on unknown route
-app.get("*", c => c.text("Weird route? Trailing slash? Please go to api.onlyraccoons.com", 404));
+app.get("*", c => c.text("Weird route? Trailing slash? Please go to httpraccoons.com", 404));
 
 const respondWithImage = async (c: Context, status: Status, query: Record<string, string>, type: ReturnType) => {
   // Get the Base64 data from KV, and cache for 1 week
