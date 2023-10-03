@@ -32,7 +32,8 @@ app.get("/all", c => {
         jpeg: `https://httpraccoons.com/jpeg/${statusObject.code}`,
         webp: `https://httpraccoons.com/webp/${statusObject.code}`,
         text: `https://httpraccoons.com/text/${statusObject.code}`,
-        json: `https://httpraccoons.com/json/${statusObject.code}`
+        json: `https://httpraccoons.com/json/${statusObject.code}`,
+        cdn: `https://cdn.httpraccoons.com/${statusObject.code}.png`
       }
     };
   });
@@ -82,7 +83,8 @@ app.get("/:type/:status", async c => {
             jpeg: `https://httpraccoons.com/jpeg/${status.code}`,
             webp: `https://httpraccoons.com/webp/${status.code}`,
             text: `https://httpraccoons.com/text/${status.code}`,
-            json: `https://httpraccoons.com/json/${status.code}`
+            json: `https://httpraccoons.com/json/${status.code}`,
+            cdn: `https://cdn.httpraccoons.com/${status.code}.png`
           }
         },
         useRealHTTPResponseCode(query) ? determineRealHTTPResponseCode(status.code) : 200

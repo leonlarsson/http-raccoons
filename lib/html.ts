@@ -2,7 +2,10 @@ import statuses from "./statuses.js";
 
 // Create the root HTML. This populates the <ul> with each entry in statuses.js
 const htmlList = Object.values(statuses)
-  .map(status => `<li><strong>${status.code} ${status.message}</strong> - (<a href="/${status.code}">png</a>) (<a href="/jpeg/${status.code}">jpeg</a>) (<a href="/webp/${status.code}">webp</a>) (<a href="/text/${status.code}">text</a>) (<a href="/json/${status.code}">json</a>)</li>`)
+  .map(
+    status =>
+      `<li><strong>${status.code} ${status.message}</strong> - (<a href="/${status.code}">png</a>) (<a href="/jpeg/${status.code}">jpeg</a>) (<a href="/webp/${status.code}">webp</a>) (<a href="/text/${status.code}">text</a>) (<a href="/json/${status.code}">json</a>) (<a href="https://cdn.httpraccoons.com/${status.code}.png">CDN</a>)</li>`
+  )
   .join("\n");
 
 export default `<!DOCTYPE html>
@@ -78,7 +81,7 @@ export default `<!DOCTYPE html>
     <h3>I do not own any of the raccoon images. Full credits go to the respective owners.</h3>
     <hr>
     <p class="instructions">
-      To return <code>image/png</code>, use <code>https://httpraccoons.com/<span class="file-extension">png</span>/<span class="status-code">[status_code]</span></code> or just <code>https://httpraccoons.com/<span class="status-code">[status_code]</span></code>
+      To return <code>image/png</code>, use <code>https://httpraccoons.com/<span class="file-extension">png</span>/<span class="status-code">[status_code]</span></code> or just <code>https://httpraccoons.com/<span class="status-code">[status_code]</span></code> (CDN: <code>https://cdn.httpraccoons.com/<span class="status-code">[status_code]</span>.png</code>)
       <br><br>
       To return <code>image/jpeg</code>, use <code>https://httpraccoons.com/<span class="file-extension">jpeg</span>/<span class="status-code">[status_code]</span></code>
       <br><br>
