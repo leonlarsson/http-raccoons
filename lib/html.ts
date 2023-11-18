@@ -48,7 +48,7 @@ export default `<!DOCTYPE html>
 <body>
     <style>
       body {
-		    font-family: "Arial";
+		    font-family: sans-serif;
       }
 
       hr {
