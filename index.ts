@@ -15,8 +15,6 @@ type Status = {
   message: string;
 };
 
-type ReturnType = "png" | "jpeg" | "webp" | "text" | "json";
-
 // Return root HTML
 app.get("/", c => c.html(rootHTML));
 
@@ -29,9 +27,7 @@ app.get("/all", c => {
       message: statusObject.message,
       formats: {
         main: `https://httpraccoons.com/${statusObject.code}`,
-        png: `https://httpraccoons.com/png/${statusObject.code}`,
-        jpeg: `https://httpraccoons.com/jpeg/${statusObject.code}`,
-        webp: `https://httpraccoons.com/webp/${statusObject.code}`,
+        image: `https://httpraccoons.com/image/${statusObject.code}`,
         text: `https://httpraccoons.com/text/${statusObject.code}`,
         json: `https://httpraccoons.com/json/${statusObject.code}`,
         cdn: `https://cdn.httpraccoons.com/${statusObject.code}.png`,
@@ -60,17 +56,17 @@ app.get("/:statusImage", async c => {
   // Wait for x milliseconds before responding if a query is specified
   if (useSleepFunction(query)) await sleep(determineWaitTime(query));
 
-  return respondWithImage(c, status, query, "png");
+  return respondWithImage(c, status, query);
 });
 
-// Return png, jpeg, webp, text, or json
+// Return image, text, or json
 app.get("/:type/:status", async c => {
-  const { type, status: statusInput } = c.req.param();
+  let { type, status: statusInput } = c.req.param();
   const query = c.req.query();
 
-  if (!["png", "jpeg", "webp", "text", "json"].includes(type))
+  if (!["png", "image", "text", "json"].includes(type))
     return c.text(
-      `Type '${type}' is not valid. Type must be one of: png, jpeg, webp, text, json.`,
+      `Type '${type}' is not valid. Type must be one of: image, text, json.`,
       400
     );
 
@@ -90,9 +86,8 @@ app.get("/:type/:status", async c => {
 
   switch (type) {
     case "png":
-    case "jpeg":
-    case "webp":
-      return respondWithImage(c, status, query, type);
+    case "image":
+      return respondWithImage(c, status, query);
     case "text":
       return c.text(
         `${status.code} ${status.message}`,
@@ -107,9 +102,7 @@ app.get("/:type/:status", async c => {
           message: status.message,
           formats: {
             main: `https://httpraccoons.com/${status.code}`,
-            png: `https://httpraccoons.com/png/${status.code}`,
-            jpeg: `https://httpraccoons.com/jpeg/${status.code}`,
-            webp: `https://httpraccoons.com/webp/${status.code}`,
+            image: `https://httpraccoons.com/image/${status.code}`,
             text: `https://httpraccoons.com/text/${status.code}`,
             json: `https://httpraccoons.com/json/${status.code}`,
             cdn: `https://cdn.httpraccoons.com/${status.code}.png`,
@@ -130,8 +123,7 @@ app.get("*", c =>
 const respondWithImage = async (
   c: Context,
   status: Status,
-  query: Record<string, string>,
-  type: ReturnType
+  query: Record<string, string>
 ) => {
   // Get the Base64 data from KV, and cache for 1 week
   const imageDataBase64 = await (c.env.CODES_KV as KVNamespace).get(
@@ -145,10 +137,10 @@ const respondWithImage = async (
       404
     );
 
-  const img = getImageBlobFromBase64(imageDataBase64, type);
+  const img = getImageBlobFromBase64(imageDataBase64);
 
   return new Response(img, {
-    headers: { "Content-Type": `image/${type}` },
+    headers: { "Content-Type": "image/png" },
     status: useRealHTTPResponseCode(query)
       ? determineRealHTTPResponseCode(status.code)
       : 200,
@@ -156,7 +148,7 @@ const respondWithImage = async (
 };
 
 // Turn base64 data into image blob
-const getImageBlobFromBase64 = (imageDataBase64: string, type: ReturnType) => {
+const getImageBlobFromBase64 = (imageDataBase64: string) => {
   const b64String = imageDataBase64.split(",")[1];
   const byteString = atob(b64String);
   const arrayBuffer = new ArrayBuffer(byteString.length);
@@ -164,7 +156,7 @@ const getImageBlobFromBase64 = (imageDataBase64: string, type: ReturnType) => {
   for (let i = 0; i < byteString.length; i++) {
     intArray[i] = byteString.charCodeAt(i);
   }
-  return new Blob([intArray], { type: `image/${type}` });
+  return new Blob([intArray], { type: "image/png" });
 };
 
 // Whether or not to attempt to return the requested HTTP code. Returns true if ?real or ?simulate are true
