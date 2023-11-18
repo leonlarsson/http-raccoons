@@ -47,7 +47,9 @@ app.get("/:statusImage", async c => {
 
   if (!availableStatuses.includes(statusInput) && statusInput !== "random")
     return c.text(
-      `Status must be one of ${availableStatuses.join(", ")}, random`,
+      `Status '${statusInput}' is not valid. Status must be one of ${availableStatuses.join(
+        ", "
+      )}, random`,
       404
     );
 
@@ -66,12 +68,19 @@ app.get("/:type/:status", async c => {
   const query = c.req.query();
 
   if (!["png", "jpeg", "webp", "text", "json"].includes(type))
-    return c.text("Type must be one of: png, jpeg, webp, text, json.", 400);
+    return c.text(
+      `Type '${type}' is not valid. Type must be one of: png, jpeg, webp, text, json.`,
+      400
+    );
+
   if (!availableStatuses.includes(statusInput) && statusInput !== "random")
     return c.text(
-      `Status must be one of ${availableStatuses.join(", ")}, random`,
+      `Status '${statusInput}' is not valid. Status must be one of ${availableStatuses.join(
+        ", "
+      )}, random`,
       404
     );
+
   const status =
     statusInput === "random" ? getRandomStatus() : statuses[statusInput];
 
