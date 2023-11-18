@@ -24,22 +24,24 @@ const imageGallery = `<div id="imageGallery">
 
 export default `<!DOCTYPE html>
 <head>
-  <title>TrasHTTPandas - Trash Panda HTTP Responses</title>
-  <meta name="title" content="TrasHTTPandas">
-  <meta name="description" content="Small API for HTTP Trash Pandas.">
+  <title>TrasHTTPandas - Raccoon HTTP Responses</title>
+  <meta name="title" content="TrasHTTPandas - Raccoon HTTP Responses">
+  <meta name="description" content="An API that returns HTTP raccoons.">
   <meta name="theme-color" content="#bf2042">
 
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://httpraccoons.com/">
-  <meta property="og:title" content="TrasHTTPandas">
-  <meta property="og:description" content="Small API for HTTP Trash Pandas.">
-  <meta property="og:image" content="https://i.imgur.com/99g7BJA.png">
+  <meta property="og:title" content="TrasHTTPandas - Raccoon HTTP Responses">
+  <meta property="og:description" content="An API that returns HTTP raccoons.">
+  <meta property="og:image" content="https://cdn.httpraccoons.com/404.png">
 
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://httpraccoons.com/">
-  <meta property="twitter:title" content="TrasHTTPandas">
-  <meta property="twitter:description" content="Small API for HTTP Trash Pandas.">
-  <meta property="twitter:image" content="https://i.imgur.com/99g7BJA.png">
+  <meta property="twitter:title" content="TrasHTTPandas - Raccoon HTTP Responses">
+  <meta property="twitter:description" content="An API that returns HTTP raccoons.">
+  <meta property="twitter:image" content="https://cdn.httpraccoons.com/404.png">
+
+  <link rel="shortcut icon" type="image/x-icon" href="https://cdn.httpraccoons.com/favicon.png">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
