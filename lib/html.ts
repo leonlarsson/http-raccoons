@@ -91,6 +91,8 @@ export default `<!DOCTYPE html>
       <br><br>
       To return <code>application/json</code>, use <code>https://httpraccoons.com/<span class="file-extension">json</span>/<span class="status-code">[status_code]</span></code>
       <br><br>
+      Any <code><span class="status-code">[status_code]</span></code> can be replaced by <code><span class="status-code">random</span></code> to return a random status code like <a id="combinedLink" href="/random"><code>https://httpraccoons.com/<span class="status-code">random</span></code></a>
+      <br><br>
       To return the requested HTTP code (200-599) instead of 200 OK, add <code><span class="query-real">?real=1</span></code> or <code><span class="query-real">?simulate=1</span></code> like <a id="combinedLink" href="/500?real=1"><code>https://httpraccoons.com/<span class="status-code">500</span><span class="query-real">?real=1</span></code></a>
       <br><br>
       To set the response time manually, add <code><span class="query-wait">?wait=x</span></code> or <code><span class="query-wait">?sleep=x</span></code> where <code class="query-wait">x</code> is an integer of milliseconds (max 110000) like <a id="combinedLink" href="/500?wait=5000"><code>https://httpraccoons.com/<span class="status-code">500</span><span class="query-wait">?wait=5000</code></code></a>
