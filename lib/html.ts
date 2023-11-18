@@ -1,12 +1,26 @@
 import statuses from "./statuses.js";
 
 // Create the root HTML. This populates the <ul> with each entry in statuses.js
-const htmlList = Object.values(statuses)
+const htmlList = `<ul>
+${Object.values(statuses)
   .map(
     status =>
       `<li><strong>${status.code} ${status.message}</strong> - (<a href="/${status.code}">png</a>) (<a href="/jpeg/${status.code}">jpeg</a>) (<a href="/webp/${status.code}">webp</a>) (<a href="/text/${status.code}">text</a>) (<a href="/json/${status.code}">json</a>) (<a href="https://cdn.httpraccoons.com/${status.code}.png">CDN</a>)</li>`
   )
-  .join("\n");
+  .join("\n")}
+  </ul>`;
+
+const imageGallery = `<div id="imageGallery">
+    ${Object.keys(statuses)
+      .map(
+        code =>
+          `<div id="imageLink">
+          <a href="/${code}"><img src="https://imagedelivery.net/KkBcKKaZGWg3MEyP4svOUw/${statuses[code].cfImagesId}/thumbnail" width="187px" height="150px" /></a>
+          <span><a href="/text/${statuses[code].code}">text</a> | <a href="/json/${statuses[code].code}">json</a> | <a href="https://cdn.httpraccoons.com/${statuses[code].code}.png">CDN</a></span>
+          </div>`
+      )
+      .join("\n")}
+    </div>`;
 
 export default `<!DOCTYPE html>
 <head>
@@ -75,6 +89,20 @@ export default `<!DOCTYPE html>
       .query-wait {
         color: #49b3ff;
       }
+
+      #imageGallery {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      #imageLink {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+      }
     </style>
     <h1>TrasHTTPandas - Trash Panda HTTP Responses</h1>
     <h3>Made by <a href="https://twitter.com/mozzyfx">Mozzy</a>. Built using <a href="https://workers.cloudflare.com/">Cloudflare Workers</a>. <a href="https://github.com/leonlarsson/http-raccoons-worker">GitHub Repo</a>.</h3>
@@ -101,8 +129,7 @@ export default `<!DOCTYPE html>
     </p>
     <hr>
     <code style="font-size: 15px;"><a id="combinedLink" href="/all"><span style="color:#68cdfe">JSON</span>.<span style="color:#d0dc8b">stringify(</span><span style="color:#32b4ff">statuses</span><span style="color:#d0dc8b">)</span></a></code>
-    <ul>
-      ${htmlList}
-    </ul>
+
+    ${htmlList}
   </body>
 </html>`;
