@@ -40,26 +40,6 @@ app.get("/all", c => {
   return c.json(output);
 });
 
-// CF Images Test
-app.get("/images/:statusCode", async c => {
-  const statusInput = c.req.param("statusCode");
-
-  if (!availableStatuses.includes(statusInput) && statusInput !== "random")
-    return c.text(
-      `Status '${statusInput}' is not valid. Status must be one of ${availableStatuses.join(
-        ", "
-      )}, random`,
-      404
-    );
-
-  const status =
-    statusInput === "random" ? getRandomStatus() : statuses[statusInput];
-
-  return fetch(
-    `https://imagedelivery.net/KkBcKKaZGWg3MEyP4svOUw/${status.cfImagesId}/public`
-  );
-});
-
 // Return png
 app.get("/:statusImage", async c => {
   const statusInput = c.req.param("statusImage");
