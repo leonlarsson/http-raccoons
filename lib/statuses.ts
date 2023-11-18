@@ -60,5 +60,5 @@ export default {
   508: { code: 508, message: "Loop Detected" },
   510: { code: 510, message: "Not Extended" },
   511: { code: 511, message: "Network Authentication Required" },
-  999: { code: 999, message: "No Raccoon Found :(" }
+  999: { code: 999, message: "No Raccoon Found :(" },
 };
