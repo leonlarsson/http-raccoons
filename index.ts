@@ -41,8 +41,8 @@ app.get("/all", c => {
 });
 
 // CF Images Test
-app.get("/images/:statusImage", async c => {
-  const statusInput = c.req.param("statusImage");
+app.get("/images/:statusCode", async c => {
+  const statusInput = c.req.param("statusCode");
 
   if (!availableStatuses.includes(statusInput) && statusInput !== "random")
     return c.text(
