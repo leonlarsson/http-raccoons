@@ -167,17 +167,11 @@ const getImageBlobFromBase64 = (imageDataBase64: string, type: ReturnType) => {
 
 // Whether or not to attempt to return the requested HTTP code. Returns true if ?real or ?simulate are true
 const useRealHTTPResponseCode = (query: Record<string, string>) =>
-  query.simulate === "1" ||
-  query.simulate === "true" ||
-  query.simulate === "yes" ||
-  query.real === "1" ||
-  query.real === "true" ||
-  query.real === "yes";
+  ["1", "true", "yes"].includes(query.simulate ?? query.real);
 
 // Whether or not to use the sleep function. Returns true if ?wait or ?sleep are integers
 const useSleepFunction = (query: Record<string, string>) =>
-  Number.isInteger(Number.parseInt(query.wait)) ||
-  Number.isInteger(Number.parseInt(query.sleep));
+  Number.isInteger(Number.parseInt(query.wait ?? query.sleep));
 
 // Queries ?real=1 OR ?simulate=1: If the code is not a valid HTTP code, return with 404. This is to prevent /999 to return a CF error due to 999 not being a valid HTTP code
 const determineRealHTTPResponseCode = (code: number): StatusCode =>
@@ -185,8 +179,7 @@ const determineRealHTTPResponseCode = (code: number): StatusCode =>
 
 // If wait query is more than 110 seconds (110,000 ms), set time to 110,000 ms
 const determineWaitTime = (query: Record<string, string>) =>
-  Number.parseInt(query.wait) > 110_000 ||
-  Number.parseInt(query.sleep) > 110_000
+  Number.parseInt(query.wait ?? query.sleep) > 110_000
     ? 110_000
     : Number.parseInt(query.wait || query.sleep);
 
