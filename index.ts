@@ -40,6 +40,19 @@ app.get("/all", c => {
   return c.json(output);
 });
 
+// Return random
+app.get("/random", async c => {
+  const query = c.req.query();
+
+  var keys = Object.keys(statuses);
+  const status = statuses[keys[ keys.length * Math.random() << 0]];
+
+  // Wait for x milliseconds before responding if a query is specified
+  if (useSleepFunction(query)) await sleep(determineWaitTime(query));
+
+  return respondWithImage(c, status, query, "png");
+});
+
 // Return png
 app.get("/:statusImage", async c => {
   const statusInput = c.req.param("statusImage");
