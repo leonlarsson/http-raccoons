@@ -11,12 +11,12 @@ ${Object.values(statuses)
   </ul>`;
 
 const imageGallery = `<div id="imageGallery">
-    ${Object.keys(statuses)
+    ${Object.values(statuses)
       .map(
-        code =>
+        status =>
           `<div id="imageLink">
-          <a href="/${code}"><img src="https://imagedelivery.net/KkBcKKaZGWg3MEyP4svOUw/${statuses[code].cfImagesId}/thumbnail" width="187px" height="150px" /></a>
-          <span><a href="/text/${statuses[code].code}">text</a> | <a href="/json/${statuses[code].code}">json</a> | <a href="https://cdn.httpraccoons.com/${statuses[code].code}.png">CDN</a></span>
+          <a href="/${status}"><img src="https://imagedelivery.net/KkBcKKaZGWg3MEyP4svOUw/${status.cfImagesId}/thumbnail" width="187px" height="150px" /></a>
+          <span><a href="/text/${status.code}">text</a> | <a href="/json/${status.code}">json</a> | <a href="https://cdn.httpraccoons.com/${status.code}.png">CDN</a></span>
           </div>`
       )
       .join("\n")}
