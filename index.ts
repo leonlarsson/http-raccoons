@@ -25,7 +25,8 @@ app.get("/all", c => {
   const output = availableStatuses.map(status => {
     const statusObject: Status = statuses[status];
     return {
-      ...statusObject,
+      code: statusObject.code,
+      message: statusObject.message,
       formats: {
         main: `https://httpraccoons.com/${statusObject.code}`,
         png: `https://httpraccoons.com/png/${statusObject.code}`,
@@ -102,7 +103,8 @@ app.get("/:type/:status", async c => {
     case "json":
       return c.json(
         {
-          ...status,
+          code: status.code,
+          message: status.message,
           formats: {
             main: `https://httpraccoons.com/${status.code}`,
             png: `https://httpraccoons.com/png/${status.code}`,
