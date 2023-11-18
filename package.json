@@ -5,12 +5,14 @@
   "description": "An API for HTTP Raccoons on Cloudflare Workers.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "wrangler dev index.ts"
   },
   "author": "Leon San José Larsson <leonlarsson8@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "hono": "^3.3.4"
+    "hono": "^3.3.4",
+    "wrangler": "^3.16.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230801.0"
