@@ -16,6 +16,7 @@ code {
   color: #fff;
   padding: 2px 5px;
   border-radius: 5px;
+  word-break: break-all;
 }
 
 .instructions {
@@ -47,7 +48,7 @@ code {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-evenly;
   margin: 20px 0;
 }
 

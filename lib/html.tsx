@@ -61,12 +61,6 @@ export const LandingPage = () => {
             To return <code>image/png</code>, use{" "}
             <code>
               https://httpraccoons.com/
-              <span class="file-extension">image</span>/
-              <span class="status-code">[status_code]</span>
-            </code>{" "}
-            or just{" "}
-            <code>
-              https://httpraccoons.com/
               <span class="status-code">[status_code]</span>
             </code>{" "}
             (CDN:{" "}
