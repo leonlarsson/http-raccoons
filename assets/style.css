@@ -1,0 +1,82 @@
+body {
+  font-family: sans-serif;
+}
+
+hr {
+  height: 7px;
+  background-color: #bf2042;
+}
+
+li {
+  margin: 10px 0;
+}
+
+code {
+  background-color: #282c34;
+  color: #fff;
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+
+.instructions {
+  font-size: 18px;
+}
+
+#combinedLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.status-code {
+  color: #ff5b5b;
+}
+
+.file-extension {
+  color: lightblue;
+}
+
+.query-real {
+  color: yellow;
+}
+
+.query-wait {
+  color: #49b3ff;
+}
+
+#imageGallery {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+#imageGalleryElement {
+  border-bottom: 2px solid transparent;
+  border-radius: 10px;
+  padding-bottom: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+#imageGalleryElement:hover {
+  border-color: #bf2042;
+}
+
+#imageGalleryElement > span > a,
+ul > li > a {
+  font-weight: 600;
+  text-decoration: none;
+  color: inherit;
+}
+
+#imageGalleryElement > span > a:hover,
+ul > li > a:hover {
+  text-decoration: underline;
+}
+
+details > summary:hover {
+  text-decoration: underline;
+}

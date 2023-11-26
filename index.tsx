@@ -1,7 +1,8 @@
 import { Context, Hono } from "hono";
+import { serveStatic } from "hono/cloudflare-workers";
 import type { StatusCode } from "hono/utils/http-status";
 import statuses from "./lib/statuses";
-import rootHTML from "./lib/html";
+import { LandingPage } from "./lib/html";
 
 const app = new Hono<{ Bindings: Bindings }>();
 const availableStatuses = Object.keys(statuses);
@@ -15,8 +16,12 @@ type Status = {
   message: string;
 };
 
+app.use("/assets/*", serveStatic({ root: "./" }));
+app.use("/style.css", serveStatic({ path: "./style.css" }));
+app.use("/favicon.png", serveStatic({ path: "./favicon.png" }));
+
 // Return root HTML
-app.get("/", c => c.html(rootHTML));
+app.get("/", c => c.html(<LandingPage />));
 
 // Return an array of all the statuses
 app.get("/all", c => {
