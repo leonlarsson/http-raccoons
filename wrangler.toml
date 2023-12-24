@@ -6,5 +6,15 @@ kv_namespaces = [
   { binding = "CODES_KV", id = "6d813d9939be47a98daf2e8fc3abe5f0", preview_id = "6d813d9939be47a98daf2e8fc3abe5f0" },
 ]
 
-[site]
-bucket = "./assets"
+rules = [
+  { type = "Text", globs = [
+    "**/*.txt",
+  ], fallthrough = true },
+  { type = "Text", globs = [
+    "**/*.css",
+  ], fallthrough = true },
+  { type = "Data", globs = [
+    "**/*.png",
+  ], fallthrough = true },
+
+]

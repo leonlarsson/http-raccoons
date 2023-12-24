@@ -1,4 +1,4 @@
-import statuses from "./statuses.js";
+import statuses from "./statuses";
 
 export const LandingPage = () => {
   return (

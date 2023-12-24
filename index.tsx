@@ -1,8 +1,11 @@
 import { Context, Hono } from "hono";
-import { serveStatic } from "hono/cloudflare-workers";
 import type { StatusCode } from "hono/utils/http-status";
 import statuses from "./lib/statuses";
 import { LandingPage } from "./lib/html";
+//@ts-ignore pesky typescript
+import styles from "./assets/style.css";
+//@ts-ignore pesky typescript
+import favicon from "./assets/favicon.png";
 
 const app = new Hono<{ Bindings: Bindings }>();
 const availableStatuses = Object.keys(statuses);
@@ -16,9 +19,9 @@ type Status = {
   message: string;
 };
 
-app.use("/assets/*", serveStatic({ root: "./" }));
-app.use("/style.css", serveStatic({ path: "./style.css" }));
-app.use("/favicon.png", serveStatic({ path: "./favicon.png" }));
+// Serve static assets
+app.get("/style.css", c => c.text(styles));
+app.get("/favicon.png", c => c.text(favicon));
 
 // Return root HTML
 app.get("/", c => c.html(<LandingPage />));
