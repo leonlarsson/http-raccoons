@@ -1,0 +1,37 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+
+  "name": "trashttpandas",
+  "main": "./index.tsx",
+  "compatibility_date": "2023-08-03",
+
+  "observability": {
+    "enabled": true
+  },
+
+  "kv_namespaces": [
+    {
+      "binding": "CODES_KV",
+      "id": "6d813d9939be47a98daf2e8fc3abe5f0",
+      "preview_id": "6d813d9939be47a98daf2e8fc3abe5f0"
+    }
+  ],
+
+  "rules": [
+    {
+      "type": "Text",
+      "globs": ["**/*.txt"],
+      "fallthrough": true
+    },
+    {
+      "type": "Text",
+      "globs": ["**/*.css"],
+      "fallthrough": true
+    },
+    {
+      "type": "Data",
+      "globs": ["**/*.png"],
+      "fallthrough": true
+    }
+  ]
+}
