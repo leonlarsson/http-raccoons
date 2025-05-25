@@ -123,10 +123,16 @@ app.get("/:type/:status", async c => {
   }
 });
 
-// Redirect to root on unknown route
-app.get("*", c =>
-  c.text("Weird route? Trailing slash? Please go to httpraccoons.com", 404)
-);
+// 404
+app.get("*", async c => {
+  const imageDataBase64 = await c.env.CODES_KV.get("HTTP_404", {
+    cacheTtl: 604_800,
+  });
+  return new Response(getImageBlobFromBase64(imageDataBase64), {
+    headers: { "Content-Type": "image/png" },
+    status: 404,
+  });
+});
 
 const respondWithImage = async (
   c: Context,
