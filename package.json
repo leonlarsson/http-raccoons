@@ -8,7 +8,7 @@
     "dev:remote": "wrangler dev --remote",
     "deploy": "wrangler deploy --minify"
   },
-  "author": "Leon San José Larsson <leonlarsson8@gmail.com>",
+  "author": "Leon San José Larsson",
   "license": "MIT",
   "dependencies": {
     "hono": "^4.1.3"
