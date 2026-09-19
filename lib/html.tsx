@@ -211,7 +211,7 @@ const StatusImageGallery = () => {
         >
           <a href={`/${status.code}`}>
             <img
-              src={`https://cdn.httpraccoons.com/${status.code}.png`}
+              src={`https://cdn.httpraccoons.com/thumbnails/${status.code}.webp`}
               alt={`${status.code} ${status.message}`}
               loading="lazy"
               decoding="async"

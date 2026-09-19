@@ -19,30 +19,64 @@ type Status = {
   message: string;
 };
 
+// Seconds each kind of response may be reused
+const CACHE_IMAGE = 604_800;
+const CACHE_DATA = 3_600;
+const CACHE_ASSET = 86_400;
+const KV_CACHE_TTL = 604_800;
+
+const assetHeaders = { "Cache-Control": `public, max-age=${CACHE_ASSET}` };
+const dataHeaders = { "Cache-Control": `public, max-age=${CACHE_DATA}` };
+
+// random picks a new status every time and ?wait/?sleep exist to delay the
+// response, so neither may be served from a cache
+const cacheHeader = (
+  isRandom: boolean,
+  query: Record<string, string>,
+  maxAge: number
+) =>
+  isRandom || useSleepFunction(query)
+    ? "no-store"
+    : `public, max-age=${maxAge}`;
+
+const formatsFor = (code: number) => ({
+  main: `https://httpraccoons.com/${code}`,
+  image: `https://httpraccoons.com/image/${code}`,
+  text: `https://httpraccoons.com/text/${code}`,
+  json: `https://httpraccoons.com/json/${code}`,
+  cdn: `https://cdn.httpraccoons.com/${code}.png`,
+});
+
+// Null when the input is not a status we serve
+const resolveStatus = (statusInput: string) => {
+  if (statusInput === "random")
+    return { status: getRandomStatus(), isRandom: true };
+  if (!availableStatuses.includes(statusInput)) return null;
+  return { status: statuses[statusInput] as Status, isRandom: false };
+};
+
+const invalidStatusText = (statusInput: string) =>
+  `Status '${statusInput}' is not valid. Status must be one of ${availableStatuses.join(
+    ", "
+  )}, random`;
+
+const responseStatus = (code: number, query: Record<string, string>) =>
+  useRealHTTPResponseCode(query) ? determineRealHTTPResponseCode(code) : 200;
+
 // Serve static assets
-app.get("/style.css", c => c.text(styles));
-app.get("/favicon.png", c => c.text(favicon));
+app.get("/style.css", c => c.text(styles, 200, assetHeaders));
+app.get("/favicon.png", c => c.text(favicon, 200, assetHeaders));
 
 // Return root HTML
-app.get("/", c => c.html(<LandingPage />));
+app.get("/", c => c.html(<LandingPage />, 200, dataHeaders));
 
 // Return an array of all the statuses
 app.get("/all", c => {
-  const output = availableStatuses.map(status => {
-    const statusObject: Status = statuses[status];
-    return {
-      code: statusObject.code,
-      message: statusObject.message,
-      formats: {
-        main: `https://httpraccoons.com/${statusObject.code}`,
-        image: `https://httpraccoons.com/image/${statusObject.code}`,
-        text: `https://httpraccoons.com/text/${statusObject.code}`,
-        json: `https://httpraccoons.com/json/${statusObject.code}`,
-        cdn: `https://cdn.httpraccoons.com/${statusObject.code}.png`,
-      },
-    };
+  const output = availableStatuses.map(key => {
+    const { code, message } = statuses[key] as Status;
+    return { code, message, formats: formatsFor(code) };
   });
-  return c.json(output);
+  return c.json(output, 200, dataHeaders);
 });
 
 // Return png
@@ -50,26 +84,18 @@ app.get("/:statusImage", async c => {
   const statusInput = c.req.param("statusImage");
   const query = c.req.query();
 
-  if (!availableStatuses.includes(statusInput) && statusInput !== "random")
-    return c.text(
-      `Status '${statusInput}' is not valid. Status must be one of ${availableStatuses.join(
-        ", "
-      )}, random`,
-      404
-    );
-
-  const status =
-    statusInput === "random" ? getRandomStatus() : statuses[statusInput];
+  const resolved = resolveStatus(statusInput);
+  if (!resolved) return c.text(invalidStatusText(statusInput), 404);
 
   // Wait for x milliseconds before responding if a query is specified
   if (useSleepFunction(query)) await sleep(determineWaitTime(query));
 
-  return respondWithImage(c, status, query);
+  return respondWithImage(c, resolved.status, query, resolved.isRandom);
 });
 
 // Return image, text, or json
 app.get("/:type/:status", async c => {
-  let { type, status: statusInput } = c.req.param();
+  const { type, status: statusInput } = c.req.param();
   const query = c.req.query();
 
   if (!["png", "image", "text", "json"].includes(type))
@@ -78,47 +104,35 @@ app.get("/:type/:status", async c => {
       400
     );
 
-  if (!availableStatuses.includes(statusInput) && statusInput !== "random")
-    return c.text(
-      `Status '${statusInput}' is not valid. Status must be one of ${availableStatuses.join(
-        ", "
-      )}, random`,
-      404
-    );
+  const resolved = resolveStatus(statusInput);
+  if (!resolved) return c.text(invalidStatusText(statusInput), 404);
 
-  const status =
-    statusInput === "random" ? getRandomStatus() : statuses[statusInput];
+  const { status, isRandom } = resolved;
 
   // Wait for x milliseconds before responding if a query is specified
   if (useSleepFunction(query)) await sleep(determineWaitTime(query));
 
+  const headers = { "Cache-Control": cacheHeader(isRandom, query, CACHE_DATA) };
+
   switch (type) {
     case "png":
     case "image":
-      return respondWithImage(c, status, query);
+      return respondWithImage(c, status, query, isRandom);
     case "text":
       return c.text(
         `${status.code} ${status.message}`,
-        useRealHTTPResponseCode(query)
-          ? determineRealHTTPResponseCode(status.code)
-          : 200
+        responseStatus(status.code, query),
+        headers
       );
     case "json":
       return c.json(
         {
           code: status.code,
           message: status.message,
-          formats: {
-            main: `https://httpraccoons.com/${status.code}`,
-            image: `https://httpraccoons.com/image/${status.code}`,
-            text: `https://httpraccoons.com/text/${status.code}`,
-            json: `https://httpraccoons.com/json/${status.code}`,
-            cdn: `https://cdn.httpraccoons.com/${status.code}.png`,
-          },
+          formats: formatsFor(status.code),
         },
-        useRealHTTPResponseCode(query)
-          ? determineRealHTTPResponseCode(status.code)
-          : 200
+        responseStatus(status.code, query),
+        headers
       );
   }
 });
@@ -126,10 +140,12 @@ app.get("/:type/:status", async c => {
 // 404
 app.get("*", async c => {
   const imageDataBase64 = await c.env.CODES_KV.get("HTTP_404", {
-    cacheTtl: 604_800,
+    cacheTtl: KV_CACHE_TTL,
   });
+  if (!imageDataBase64) return c.text("404 Not Found", 404);
+
   return new Response(getImageBlobFromBase64(imageDataBase64), {
-    headers: { "Content-Type": "image/png" },
+    headers: { "Content-Type": "image/png", ...dataHeaders },
     status: 404,
   });
 });
@@ -137,12 +153,13 @@ app.get("*", async c => {
 const respondWithImage = async (
   c: Context,
   status: Status,
-  query: Record<string, string>
+  query: Record<string, string>,
+  isRandom: boolean
 ) => {
   // Get the Base64 data from KV, and cache for 1 week
   const imageDataBase64 = await (c.env.CODES_KV as KVNamespace).get(
     `HTTP_${status.code}`,
-    { cacheTtl: 604_800 }
+    { cacheTtl: KV_CACHE_TTL }
   );
   // If no KV found, return
   if (!imageDataBase64)
@@ -151,13 +168,12 @@ const respondWithImage = async (
       404
     );
 
-  const img = getImageBlobFromBase64(imageDataBase64);
-
-  return new Response(img, {
-    headers: { "Content-Type": "image/png" },
-    status: useRealHTTPResponseCode(query)
-      ? determineRealHTTPResponseCode(status.code)
-      : 200,
+  return new Response(getImageBlobFromBase64(imageDataBase64), {
+    headers: {
+      "Content-Type": "image/png",
+      "Cache-Control": cacheHeader(isRandom, query, CACHE_IMAGE),
+    },
+    status: responseStatus(status.code, query),
   });
 };
 
