@@ -211,7 +211,10 @@ const StatusImageGallery = () => {
         >
           <a href={`/${status.code}`}>
             <img
-              src={`https://imagedelivery.net/KkBcKKaZGWg3MEyP4svOUw/${status.cfImagesId}/thumbnail`}
+              src={`https://cdn.httpraccoons.com/${status.code}.png`}
+              alt={`${status.code} ${status.message}`}
+              loading="lazy"
+              decoding="async"
               width={224}
               height={180}
             />
